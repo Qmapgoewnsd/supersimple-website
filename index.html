@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6TrqvIY5MFLaclQl9ayv9guzIIySZyHcdJg&s">
+    <title>Sign up</title>
+</head>
+<body>
+    <h2 class="log">Sign up</h2>
+    <form id="loginForm">
+        <label for="username" class="username">Email:</label>
+        <input type="email" id="username" class="username" minlength="12" maxlength="255" required><br><br>
+        <label for="password" class="password">Password:</label>
+        <input type="password" id="password" class="password" minlength="5" maxlength="255" required><br><br>
+        <button type="button" onclick="insert()">Submit</button>
+    </form>
+    <script>
+        function insert() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            console.log('Sending data:', { username, password });  // Log data being sent
+            if (username && password) {
+                fetch('http://localhost:3000/insert', {  // Make sure the URL is correct
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })  // Send username and password as JSON
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');  // Handle response errors
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Response from server:", data);  // Log server response
+                    alert(data.message);  // Show success message
+                })
+                .catch(error => {
+                    console.error("Error:", error);  // Log errors to console
+                    alert("Error occurred while inserting data");
+                });
+            } else {
+                alert("Please fill in both email and password.");
+            }
+        }
+    </script>
+</body>
+</html>
